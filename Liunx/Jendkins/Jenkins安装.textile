@@ -1,0 +1,45 @@
+1.下载依赖
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+2.导入秘钥
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+3.安装
+yum install jenkins
+查找jenkins安装路径
+
+4.启动前检查是否已安装jdk
+java
+
+5.查找jenkins安装路径
+rpm -ql jenkins
+jenkins安装路径
+jenkins相关目录释义：
+（1）/usr/lib/jenkins/：jenkins安装目录，war包会放在这里。
+ (2) /etc/sysconfig/jenkins：jenkins配置文件，“端口”，“JENKINS_HOME”等都可以在这里配置。
+（3）/var/lib/jenkins/：默认的JENKINS_HOME。
+（4）/var/log/jenkins/jenkins.log：jenkins日志文件。
+
+6.配置jenkins
+（1）查找jenkins端口
+	vim /etc/sysconfig/jenkins
+	：set ignorecase
+	/jenkins_port 回车
+	查找到jenkins端口为8080
+（2）查看其他端口占用情况
+	netstat -ntlp
+  被占用端口与jenkins端口8080无冲突，即可进入下一步启动jenkins
+ (3）启动jenkins
+  java -jar /usr/lib/jenkins/jenkins.war --httpPort=8080
+（4）修改jenkins端口
+	若默认8080端口未被占用，可不修改
+	若端口已被占用，则修改端口为其他端口，并将对应端口开放
+  #端口改为8899
+	java -jar /usr/lib/jenkins/jenkins.war --ajp13Port=-1 --httpPort=8899
+	#启动
+	java -jar /usr/lib/jenkins/jenkins.war --httpPort=8899
+ 启动完成
+ (5）验证jenkins能否打开
+	在宿主机浏览器输入http://IP:Port
+	我这里输入：http://192.168.114.128:8080
+	(修改端口后输入：http://192.168.114.128:8899）

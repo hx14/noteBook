@@ -1,0 +1,26 @@
+1.安装java
+sudo apt-get update
+sudo apt-get install python-software-properties
+sudo apt-get install software-properties-common
+sudo apt-get update
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+sudo update-java-alternatives -s java-8-oracle
+java -version
+javac -version
+
+2.安装mysql
+sudo apt-get install mysql-server
+sudo apt-get install mysql-client
+sudo apt-get install libmysqlclient-dev
+// 开启远程访问 
+--将bind-address = 127.0.0.1注释掉
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+--创建用户、密码及权限范围 第一个 root为用户名@后为适用的主机，‘%’表示所有电脑都可以访问连接，第二个 root 为密码
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+flush privileges;  // 立即生效
+sudo service mysql restart //重启
+
+3.安装redis
+sudo apt-get install redis-server

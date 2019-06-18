@@ -1,0 +1,18 @@
+ 开启redis
+ cd D:\Redis\
+ .\redis-server.exe redis.windows.conf
+ Liunx重启服务
+sudo /etc/init.d/redis-server restart
+
+ redis使用IP连接
+ 修改 redis.windows.conf文件
+ 56行代码 bind 127.0.0.1 ,加上注释(#)
+ protected-mode 修改为no,保护模式关闭
+ 在配置文件中添加密码： requirepass  123456，设置密码后使用方也需要添加密码
+
+ redis开启AOF持久化
+ 默认是appendonly no。改成appendonly yes。
+ 默认是：
+	# appendfsync always   #每次收到写命令就立即强制写入磁盘，最慢的，但是保证完全的持久化，不推荐使用  
+	appendfsync everysec     #每秒钟强制写入磁盘一次，在性能和持久化方面做了很好的折中，推荐  
+	# appendfsync no    #完全依赖os，性能最好,持久化没保证  
