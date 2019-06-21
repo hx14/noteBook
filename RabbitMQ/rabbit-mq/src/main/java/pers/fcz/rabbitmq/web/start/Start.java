@@ -1,4 +1,4 @@
-package pers.fcz.rabbitmq.start;
+package pers.fcz.rabbitmq.web.start;
 
 /**
  * @author Mr.F
