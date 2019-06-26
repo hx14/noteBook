@@ -20,7 +20,6 @@ public class Recv {
         Channel channel = connection.createChannel();
         // 查询状态
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
         // 接收数据
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
