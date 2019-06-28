@@ -122,10 +122,47 @@ B-Tree索引适用于全键值、键值范围或键前缀查找。其中键前�
   - 更容易对数据库拆分，高可用、可拓展。
   - 程序中使用Hash关联，某些场景效率相比Mysql的嵌套关联效率更高
 
+## 索引使用
+MySQL QUERY CACHE
 
+查询缓存可以将查询语句结构和查询结果缓存起来。如果查询是同样结构的SQL,可以直接从缓存中读取结果。表中任何数据或是结构的改变，缓存就会失效。
 
+缓存内容为 SELECT 的结果集, 缓存使用完整的 SQL 字符串做 KEY, 并区分大小写，空格等。即两个 SQL 必须完全一致才会缓存命中。
 
+MySQL QUERY CACHE 是对大小写敏感的，因为Query Cache在内存中是以HASH结构来进行映射。
 
+对于频繁更新的表，缓存会频繁失效给服务器造成很大的开销
+
+开启缓存: 到MySQL安装目录下找到my.ini文件修改，linux下是my.cnf。 文件目录C:\ProgramData\MySQL\MySQL Server
+
+查看缓存 show status like '%qcache%';
+  - Qcache_free_blocks: 表示查询缓存中目前还有多少剩余的blocks。值较大，说明查询缓存中的内存碎片过多。  
+    减少碎片: 合适的 query_cache_min_res_unit 可以减少碎片，这个参数最合适的大小和应用程序查询结果的平均大小直接相关，可以通过内存实际消耗(query_cache_size - Qcache_free_memory)除以 Qcache_queries_in_cache 计算平均缓存大小。 
+  - Qcache_free_memory: 查询缓存的剩余内存大小。 
+  - Qcache_hits: 表示有多少次命中缓存。我们主要可以通过该值来验证我们的查询缓存的效果。数字越大，缓存效果越理想。 
+  - Qcache_inserts: 表示多少次未命中然后插入。 
+  - Qcache_lowmem_prunes: 该参数记录有多少条查询因为内存不足而被移除出查询缓存。通过这个值，可以适当的调整缓存大小。 
+  - Qcache_not_cached: 表示因为 query_cache_type 的设置而没有被缓存的查询数量。 
+  - Qcache_queries_in_cache: 当前缓存中缓存的查询数量。 
+  - Qcache_total_blocks:当前缓存的block数量。
+
+查询缓存状态 SHOW VARIABLES LIKE '%query_cache%';
+  - have_query_cache 是否支持缓存
+  - query_cache_limit 允许缓存的单条查询结果集的最大容量
+  - query_cache_min_res_unit 分配内存块时的最小单位大小
+  - query_cache_size  缓存使用的总内存空间大小
+  - query_cache_type 缓存类型
+    - OFF(0) 未开启
+    - NO(1) 开启
+    - DEMAND(2) 只有当SELECT语句中使用了SQL_CACHE才开启
+     使用方法: SELECT SQL_CACHE * FROM my_table WHERE condition;
+
+设置缓存变量: set global query_cache_size = 600000;
+清空缓存 reset query cache;
+整理碎片 flush query cache
+查询缓存结果集 show status like 'qcache_q%'
+
+> 使用MySQL QUERY CACHE时，尽量将query_cache_type设置为2。 如果开启全部缓存，所有SQL都会产生缓存，每次执行SQL都会先去缓存中找结果，频繁的I/O会导致效率的降低。应该结合业务找到适合缓存的SQL进行缓存。
 
 
 

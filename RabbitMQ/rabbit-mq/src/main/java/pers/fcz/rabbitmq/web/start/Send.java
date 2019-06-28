@@ -24,9 +24,7 @@ public class Send {
             for (int i = 0; i < 100; i++) {
                 channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             }
-
             System.out.println(" [x] Sent '" + message + "'");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
