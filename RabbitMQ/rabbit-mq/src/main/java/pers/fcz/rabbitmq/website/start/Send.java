@@ -1,4 +1,4 @@
-package pers.fcz.rabbitmq.web.start;
+package pers.fcz.rabbitmq.website.start;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
