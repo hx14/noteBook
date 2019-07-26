@@ -4,7 +4,7 @@ import com.rabbitmq.client.*;
 import java.util.Scanner;
 
 /**
- * RabbitMQ官网 教程 Routing (接受消息)
+ * RabbitMQ官网 教程 Routing模式 (接受消息)
  * @author Mr.F
  * @since 2019/7/5 09:34
  **/

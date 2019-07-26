@@ -6,7 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.util.Scanner;
 
 /**
- * RabbitMQ官网 教程 Routing (发送消息)
+ * RabbitMQ官网 教程 Routing模式 (发送消息)
  * @author Mr.F
  * @since 2019/7/5 09:33
  **/
@@ -24,7 +24,7 @@ public class EmitLogDirect {
                 Scanner scanner = new Scanner(System.in);
                 // 队列名称
                 System.out.println("Please print bind: ");
-                String severity =scanner.nextLine();;
+                String severity = scanner.nextLine();;
                 // 消息
                 System.out.println("Please send message: ");
                 String message = scanner.nextLine();
