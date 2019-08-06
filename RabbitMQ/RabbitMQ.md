@@ -2,11 +2,47 @@
 
 ### 安装
 
-常用指令
-- "C:\software\RabbitMQ Server\rabbitmq_server-3.7.15\sbin\rabbitmq-plugins.bat" enable rabbitmq_management
-- 启动服务 rabbitmq-server start
-- 关闭服务 rabbitmq-server stop
-- 修改配置 通过修改rabbitmq.config文件
+
+rabbitmq启动方式有2种
+
+1、以应用方式启动
+
+rabbitmq-server -detached 后台启动
+
+Rabbitmq-server 直接启动，如果你关闭窗口或者需要在改窗口使用其他命令时应用就会停止
+
+关闭:rabbitmqctl stop
+
+2、以服务方式启动（安装完之后在任务管理器中服务一栏能看到RabbtiMq）
+
+rabbitmq-service install 安装服务
+
+rabbitmq-service start 开始服务
+
+Rabbitmq-service stop  停止服务
+
+Rabbitmq-service enable 使服务有效
+
+Rabbitmq-service disable 使服务无效
+
+rabbitmq-service help 帮助
+
+当rabbitmq-service install之后默认服务是enable的，如果这时设置服务为disable的话，rabbitmq-service start就会报错。
+
+当rabbitmq-service start正常启动服务之后，使用disable是没有效果的
+
+关闭:rabbitmqctl stop
+
+3、Rabbitmq 管理插件启动，可视化界面
+
+rabbitmq-plugins enable rabbitmq_management 启动
+
+rabbitmq-plugins disable rabbitmq_management 关闭
+
+
+4、Rabbitmq节点管理方式
+Rabbitmqctl
+
 
 ### Rabbit基本概念
 RabbitMQ底层为erlang语言，是AMQP（高级消息队列协议）的标准实现。
@@ -42,17 +78,28 @@ RabbitMQ确保持久性消息能从服务器重启中恢复的方式是，将它
 持久化带来的缺陷: 会极大地减少RabbitMQ服务器每秒可处理的消息总数。
 
 ##### 集群
-RabbitMQ 会始终记录以下四种类型的内部元数据：
-- 队列元数据: 队列名称和它们的属性（是否可持久化, 是否自动删除）
-- 交换器元数据: 交换器名称、 类型和属性（可持久化等）
-- 绑定元数据: 一张简单的表格展示了如何将消息路由到队列
-- vhost元数据: 为vhost 内的队列、 交换器和绑定提供命名空间和安全属性
+RabbitMQ最优秀的功能之一就是其内建集群, 集群可以允许消费者和生产者在Rabbit节点崩溃的情况下继续运行，以及通过添加更多的节点来线性扩展消息通信吞吐量。
 
+RabbitMQ 有三种模式：单机模式、普通集群模式、镜像集群模式。
+  - 单机模式 一般为本地测试使用
+  - 普通集群模式 高吞吐, 不高可用
+  - 镜像集群模式 高可用
+
+RabbitMQ 会记录以下四种类型的内部元数据：
+  - 队列元数据: 队列名称和它们的属性（是否可持久化, 是否自动删除）
+  - 交换器元数据: 交换器名称、 类型和属性（可持久化等）
+  - 绑定元数据: 一张简单的表格展示了如何将消息路由到队列
+  - vhost元数据: 为vhost 内的队列、 交换器和绑定提供命名空间和安全属性
+
+**普通集群模式**
 在单一节点内，RabbitMQ会将所有信息存储在内存中，同时将可持久化的队列和交换器（以及它们的绑定）存储到硬盘上。
 
-但是如果在集群中创建队列的话。 结果是只有队列的所有者节点知道有关队列的所有信息, 所有其他非所有者节点只知道队列的元数据和指向该队列存在的那个节点的指针。
+但是如果在集群中创建队列的话。只有队列的所有者节点知道有关队列的所有信息, 所有其他非所有者节点只知道队列的元数据和指向该队列存在的那个节点的指针。
 
-在集群中， 可以选择配置部分节点为内存节点。 它使得像队列和交换器声明之类的操作更加快速.
+在集群中，可以选择配置部分节点为内存节点。 它使得像队列和交换器声明之类的操作更加快速.
+
+**镜像集群模式**
+在镜像集群模式下，创建的 queue，无论元数据还是 queue 里的消息都会存在于多个实例上，每个 RabbitMQ 节点都有这个 queue 的一个完整镜像，包含 queue 的全部数据的意思。然后每次写消息到 queue 的时候，都会自动把消息同步到多个实例的 queue 上。
 
 
 
